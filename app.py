@@ -6,7 +6,6 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'clave_terrence_2026'
 
-# Configuración de Base de Datos
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'extranjeria.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -29,106 +28,103 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Terrence.m | Intelligence Portal</title>
+    <title>Terrence.m | Intelligence Core</title>
     <style>
-        body { background: #030507; color: #00d2ff; font-family: 'Courier New', monospace; }
-        .glass { background: rgba(0, 210, 255, 0.03); border: 1px solid #00d2ff; border-radius: 12px; padding: 25px; box-shadow: 0 0 25px rgba(0,210,255,0.1); transition: 0.3s; }
-        .glass:hover { box-shadow: 0 0 35px rgba(0,210,255,0.2); }
-        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; font-weight: bold; letter-spacing: 1px; }
-        .btn-neon:hover { background: #00d2ff; color: #000; box-shadow: 0 0 30px #00d2ff; transform: scale(1.03); }
-        input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #00d2ff !important; font-size: 0.9rem; }
-        .table { color: #fff; border-color: #00d2ff; vertical-align: middle; }
-        .link-expediente { color: #00d2ff; text-decoration: none; border-bottom: 1px dashed #00d2ff; font-weight: bold; }
-        .link-expediente:hover { color: #fff; border-bottom: 1px solid #fff; }
-        .badge-status { font-size: 0.65rem; background: rgba(0, 255, 0, 0.1); color: #00ff00; border: 1px solid #00ff00; }
-        .progress { height: 6px; background: #0a0b10; border: 1px solid #00d2ff; border-radius: 10px; margin-top: 5px; }
+        body { background: #020406; color: #00d2ff; font-family: 'Courier New', monospace; overflow-x: hidden; }
+        .cyber-panel { background: rgba(0, 210, 255, 0.03); border: 1px solid #00d2ff; border-radius: 5px; padding: 20px; position: relative; box-shadow: inset 0 0 15px rgba(0,210,255,0.1); }
+        .header-main { border-bottom: 2px solid #00d2ff; margin-bottom: 30px; padding-bottom: 10px; }
+        .btn-cyber { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; text-transform: uppercase; font-weight: bold; transition: 0.3s; }
+        .btn-cyber:hover { background: #00d2ff; color: #000; box-shadow: 0 0 20px #00d2ff; }
+        input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #333 !important; border-bottom: 1px solid #00d2ff !important; }
+        .stat-card { border-left: 3px solid #00ff00; padding-left: 10px; margin-bottom: 20px; }
+        .progress { height: 4px; background: #081015; margin-top: 8px; border-radius: 0; }
         .progress-bar { background: #00d2ff; box-shadow: 0 0 10px #00d2ff; }
-        .scan-line { width: 100%; height: 2px; background: #00d2ff; position: absolute; opacity: 0.2; animation: scan 3s infinite linear; }
-        @keyframes scan { from { top: 0; } to { top: 100%; } }
+        .scanline { width: 100%; height: 100px; background: linear-gradient(0deg, rgba(0,210,255,0) 0%, rgba(0,210,255,0.1) 50%, rgba(0,210,255,0) 100%); position: absolute; animation: moveScan 4s infinite linear; pointer-events: none; }
+        @keyframes moveScan { from { top: -100px; } to { top: 100%; } }
+        .link-exp { color: #00d2ff; text-decoration: none; border: 1px solid transparent; padding: 2px 5px; }
+        .link-exp:hover { border: 1px solid #00d2ff; background: rgba(0,210,255,0.1); }
     </style>
 </head>
 <body class="p-4">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-info pb-3">
+    <div class="scanline"></div>
+    <div class="container-fluid">
+        <div class="header-main d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="m-0 fw-bold"><i class="fas fa-brain"></i> TERRENCE.M <small style="font-size: 0.5em; opacity: 0.6;">CORE v3.0</small></h1>
-                <div class="d-flex gap-3 small mt-1">
-                    <span class="text-success"><i class="fas fa-circle" style="font-size: 8px;"></i> SISTEMA ONLINE</span>
-                    <span class="text-info"><i class="fas fa-satellite"></i> SAT: GUAYAQUIL-EQ</span>
-                </div>
+                <h1 class="m-0 fw-bold"><i class="fas fa-microchip"></i> TERRENCE.M</h1>
+                <small class="text-success"><i class="fas fa-terminal"></i> KERNEL MIGRATORIO v4.0 // CONECTADO</small>
             </div>
-            <div class="text-end">
-                <a href="/download" class="btn btn-neon btn-sm mb-2"><i class="fas fa-file-export me-1"></i> EXPORTAR DATA TXT</a>
+            <div class="d-flex gap-3">
+                <div class="text-end border-end pe-3 border-info">
+                    <div class="small opacity-50">LATENCIA DB</div>
+                    <div class="text-info fw-bold">12ms</div>
+                </div>
+                <a href="/download" class="btn btn-cyber btn-sm"><i class="fas fa-download"></i> REPORTE TOTAL</a>
             </div>
         </div>
 
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="glass mb-4">
-                    <h6 class="text-info mb-3"><i class="fas fa-plus-circle me-2"></i>ALTA DE EXPEDIENTE</h6>
+            <div class="col-md-3">
+                <div class="cyber-panel mb-4">
+                    <h6 class="mb-4 text-info fw-bold border-bottom border-info pb-2">INGRESAR PROTOCOLO</h6>
                     <form action="/add" method="POST">
-                        <label class="small opacity-50">CIUDADANO</label>
-                        <input type="text" name="cliente" class="form-control mb-3" placeholder="Nombre completo..." required>
-                        <label class="small opacity-50">TIPO DE VISA SOLICITADA</label>
-                        <select name="tipo" class="form-select mb-3">
-                            <option value="Visa Mercosur">Visa Mercosur</option>
-                            <option value="Visa Nomada Digital">Visa Nomada Digital (Ecuador)</option>
-                            <option value="Residencia Permanente">Residencia Permanente</option>
-                            <option value="Visa de Inversionista">Visa de Inversionista</option>
-                        </select>
-                        <button type="submit" class="btn btn-neon w-100">INICIAR PROCESO</button>
+                        <div class="mb-3">
+                            <label class="small opacity-50">NOMBRE DEL SOLICITANTE</label>
+                            <input type="text" name="cliente" class="form-control" placeholder="Esperando entrada..." required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="small opacity-50">TIPO DE VISA (REAL)</label>
+                            <select name="tipo" class="form-select">
+                                <option value="Visa Mercosur">Temporal - Mercosur</option>
+                                <option value="Visa Nomada Digital">Nómada Digital (EC)</option>
+                                <option value="Residencia Permanente">Residencia Permanente</option>
+                                <option value="Inversionista">Inversionista G1</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-cyber w-100">EJECUTAR SINCRONIZACIÓN</button>
                     </form>
                 </div>
 
-                <div class="glass border-success p-3">
-                    <h6 class="text-success fw-bold small"><i class="fas fa-chart-line me-2"></i>ANÁLISIS DE CARGA</h6>
-                    <div class="d-flex justify-content-between small">
-                        <span>Tramites Hoy:</span>
-                        <span class="fw-bold">0{{ tramites|length }}</span>
-                    </div>
-                    <div class="progress mt-2">
-                        <div class="progress-bar w-75" role="progressbar"></div>
-                    </div>
-                    <p class="text-center opacity-50 mt-2 mb-0" style="font-size: 0.6rem;">LATENCIA DE BASE DE DATOS: 14ms</p>
+                <div class="stat-card">
+                    <div class="small opacity-50">EXPEDIENTES ACTIVOS</div>
+                    <h3 class="m-0">{{ tramites|length }}</h3>
+                    <div class="progress"><div class="progress-bar w-50"></div></div>
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div class="glass position-relative overflow-hidden">
-                    <div class="scan-line"></div>
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h6 class="text-info m-0 fw-bold"><i class="fas fa-database me-2"></i>EXPEDIENTES EN NUBE</h6>
-                        <input type="text" id="busqueda" class="form-control w-50" placeholder="Filtrar por nombre...">
+            <div class="col-md-9">
+                <div class="cyber-panel">
+                    <div class="d-flex justify-content-between mb-3 align-items-center">
+                        <h6 class="m-0 text-info fw-bold"><i class="fas fa-database"></i> BASE DE DATOS EN TIEMPO REAL</h6>
+                        <input type="text" id="busqueda" class="form-control w-25 form-control-sm" placeholder="Buscar ciudadano...">
                     </div>
                     
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover" id="tablaTramites">
-                            <thead class="text-info border-bottom border-info">
-                                <tr>
+                        <table class="table table-dark table-hover border-secondary" id="tabla">
+                            <thead>
+                                <tr class="text-info">
                                     <th>#UID</th>
-                                    <th>SOLICITANTE</th>
+                                    <th>CIUDADANO</th>
                                     <th>CATEGORÍA</th>
                                     <th>PROGRESO</th>
-                                    <th>ACCIONES</th>
+                                    <th>ESTADO</th>
+                                    <th>ACCIÓN</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for t in tramites %}
                                 <tr>
-                                    <td class="small opacity-50">{{ t.id }}</td>
+                                    <td class="text-secondary small">0x0{{ t.id }}</td>
                                     <td>
-                                        <a href="/expediente/{{ t.cliente }}" class="link-expediente">
-                                            {{ t.cliente }}
+                                        <a href="/expediente/{{ t.cliente }}" class="link-exp">
+                                            <i class="fas fa-user-circle me-2"></i>{{ t.cliente }}
                                         </a>
-                                        <br><span class="badge badge-status">VERIFICADO</span>
                                     </td>
-                                    <td><span class="small">{{ t.tipo }}</span></td>
-                                    <td style="width: 120px;">
-                                        <div class="progress">
-                                            <div class="progress-bar" style="width: 45%;"></div>
-                                        </div>
-                                        <span style="font-size: 0.6rem; color: #00ff00;">Fase de Revisión</span>
+                                    <td><span class="badge border border-info text-info">{{ t.tipo }}</span></td>
+                                    <td style="width: 150px;">
+                                        <div class="progress"><div class="progress-bar" style="width: 65%;"></div></div>
+                                        <small style="font-size: 10px; color: #00ff00;">Verificando...</small>
                                     </td>
+                                    <td><span class="text-success"><i class="fas fa-check-double"></i> OK</span></td>
                                     <td>
                                         <a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash-alt"></i></a>
                                     </td>
@@ -140,15 +136,19 @@ HTML_TEMPLATE = """
                 </div>
             </div>
         </div>
+
+        <div class="mt-5 small text-center opacity-50">
+            <i class="fas fa-map-marker-alt"></i> GUAYAQUIL HUB: 2.189° S, 79.889° W | ENCRIPTACIÓN SSL-TLS ACTIVA
+        </div>
     </div>
 
     <script>
         document.getElementById('busqueda').addEventListener('keyup', function() {
-            let filtro = this.value.toUpperCase();
-            let filas = document.getElementById('tablaTramites').getElementsByTagName('tr');
-            for (let i = 1; i < filas.length; i++) {
-                let texto = filas[i].textContent || filas[i].innerText;
-                filas[i].style.display = texto.toUpperCase().indexOf(filtro) > -1 ? "" : "none";
+            let filter = this.value.toUpperCase();
+            let rows = document.getElementById('tabla').getElementsByTagName('tr');
+            for (let i = 1; i < rows.length; i++) {
+                let text = rows[i].innerText.toUpperCase();
+                rows[i].style.display = text.indexOf(filter) > -1 ? "" : "none";
             }
         });
     </script>
@@ -178,25 +178,23 @@ def delete(id):
 @app.route('/download')
 def download():
     tramites = Tramite.query.all()
-    output = "TERRENCE.M INTELLIGENCE REPORT\\n" + "="*40 + "\\n"
+    output = "TERRENCE.M INTELLIGENCE SYSTEM REPORT\\n" + "="*40 + "\\n"
     for t in tramites:
-        output += f"UID: {t.id} | Cliente: {t.cliente} | Visa: {t.tipo} | Registro: {t.fecha}\\n"
-    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte_terrence_m.txt"})
+        output += f"UID: {t.id} | Cliente: {t.cliente} | Tipo: {t.tipo} | Fecha: {t.fecha}\\n"
+    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte_terrence.txt"})
 
 @app.route('/expediente/<cliente>')
 def expediente(cliente):
     return f'''
-    <body style="background: #030507; color: #00d2ff; font-family: monospace; padding: 50px;">
-        <div style="border: 2px solid #00d2ff; padding: 40px; border-radius: 15px; max-width: 700px; margin: auto; box-shadow: 0 0 40px rgba(0,210,255,0.3);">
-            <h1 style="text-transform: uppercase;"><i class="fas fa-user-check"></i> EXPEDIENTE: {cliente}</h1>
+    <body style="background: #020406; color: #00d2ff; font-family: monospace; padding: 50px; display: flex; align-items: center; justify-content: center; height: 100vh;">
+        <div style="border: 2px solid #00d2ff; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 0 50px rgba(0,210,255,0.2);">
+            <h1 style="text-transform: uppercase;">ACCESO AUTORIZADO</h1>
             <hr style="border-color: #00d2ff;">
-            <div style="background: rgba(0,210,255,0.05); padding: 20px; border-radius: 10px;">
-                <p><strong>ESTADO GLOBAL:</strong> <span style="color: #00ff00;">EN TRÁMITE DIPLOMÁTICO</span></p>
-                <p><strong>UBICACIÓN:</strong> CANCILLERÍA - SEDE CENTRAL</p>
-                <p><strong>NIVEL DE ACCESO:</strong> NIVEL 4 (CONFIDENCIAL)</p>
-            </div>
+            <h3>SOLICITANTE: {cliente}</h3>
+            <p>ESTADO: <span style="color: #00ff00;">EXPEDIENTE ENVIADO A CANCILLERÍA</span></p>
+            <p style="opacity: 0.5;">ID de Rastreo: T-{cliente[:3].upper()}-2026</p>
             <br>
-            <a href="/" style="color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 12px 25px; border-radius: 5px;">[ RETORNAR AL NÚCLEO ]</a>
+            <a href="/" style="color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 10px 20px;">[ VOLVER AL TERMINAL ]</a>
         </div>
     </body>
     '''
@@ -204,3 +202,4 @@ def expediente(cliente):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+    
