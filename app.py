@@ -6,24 +6,23 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_terrence_m'
 
-# CONFIGURACIÓN DE BASE DE DATOS
+# Configuración de Base de Datos
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'extranjeria.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# MODELO DE DATOS
 class Tramite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cliente = db.Column(db.String(100), nullable=False)
-    tipo_tramite = db.Column(db.String(100), nullable=False)
-    fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
+    tipo = db.Column(db.String(100), nullable=False)
+    estado = db.Column(db.String(50), default='En Proceso')
+    fecha = db.Column(db.DateTime, default=datetime.utcnow)
 
 with app.app_context():
     db.create_all()
 
-# PLANTILLA ÚNICA (HTML + BOOTSTRAP)
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html lang="es">
@@ -31,65 +30,81 @@ HTML_TEMPLATE = """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Terrence.m | Gestión de Extranjería</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Terrence.m | Panel Profesional</title>
+    <style>
+        .navbar { background: #002d5a; }
+        .btn-primary { background: #0056b3; border: none; }
+        .card { border-radius: 15px; border: none; }
+        .table-dark { background: #002d5a; }
+    </style>
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-dark bg-dark shadow-sm">
+    <nav class="navbar navbar-dark shadow">
         <div class="container">
-            <a class="navbar-brand" href="#"><strong>Terrence.m</strong> - Consultoría Legal</a>
+            <a class="navbar-brand" href="#"><i class="fas fa-balance-scale me-2"></i><strong>Terrence.m</strong> - Consultoría de Extranjería</a>
         </div>
     </nav>
 
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card shadow-sm p-4">
-                    <h5 class="text-primary mb-3">Nuevo Trámite</h5>
-                    <form action="/agregar" method="POST">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card shadow p-4">
+                    <h5 class="text-primary mb-4"><i class="fas fa-user-plus me-2"></i>Nuevo Registro</h5>
+                    <form action="/add" method="POST">
                         <div class="mb-3">
-                            <label class="form-label">Nombre del Cliente</label>
-                            <input type="text" name="cliente" class="form-control" placeholder="Ej. Juan Pérez" required>
+                            <label class="form-label text-secondary">Nombre del Solicitante</label>
+                            <input type="text" name="cliente" class="form-control form-control-lg" placeholder="Nombre completo" required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Tipo de Trámite</label>
-                            <select name="tipo" class="form-select">
+                            <label class="form-label text-secondary">Servicio Requerido</label>
+                            <select name="tipo" class="form-select form-control-lg">
                                 <option value="Visa de Residencia">Visa de Residencia</option>
-                                <option value="Naturalización">Naturalización</option>
-                                <option value="Asesoría Legal">Asesoría Legal</option>
+                                <option value="Asesoría Migratoria">Asesoría Migratoria</option>
+                                <option value="Renovación de Permiso">Renovación de Permiso</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Registrar en Sistema</button>
+                        <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Registrar Trámite</button>
                     </form>
                 </div>
             </div>
 
-            <div class="col-md-8">
-                <div class="card shadow-sm p-4">
-                    <h5 class="mb-3">Historial de Gestiones</h5>
-                    <table class="table table-striped">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Cliente</th>
-                                <th>Trámite</th>
-                                <th>Fecha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for t in tramites %}
-                            <tr>
-                                <td>{{ t.id }}</td>
-                                <td>{{ t.cliente }}</td>
-                                <td><span class="badge bg-info text-dark">{{ t.tipo_tramite }}</span></td>
-                                <td>{{ t.fecha_creacion.strftime('%d/%m/%Y') }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="col-lg-8">
+                <div class="card shadow p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="m-0"><i class="fas fa-list-ul me-2"></i>Panel de Control de Trámites</h5>
+                        <span class="badge bg-success">Sistema Conectado</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Servicio</th>
+                                    <th>Cliente</th>
+                                    <th>Estado</th>
+                                    <th>Prioridad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for t in tramites %}
+                                <tr>
+                                    <td><strong>{{ t.tipo }}</strong></td>
+                                    <td>{{ t.cliente }}</td>
+                                    <td><span class="badge rounded-pill bg-info text-dark">En Revisión</span></td>
+                                    <td><span class="text-danger"><i class="fas fa-circle me-1"></i> Alta</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <footer class="mt-5 py-4 bg-white text-center text-secondary border-top">
+        <small>&copy; 2026 Terrence.m | Servicios Legales de Extranjería | <i class="fas fa-shield-alt"></i> Datos Encriptados</small>
+    </footer>
 </body>
 </html>
 """
@@ -99,17 +114,13 @@ def index():
     tramites = Tramite.query.order_by(Tramite.id.desc()).all()
     return render_template_string(HTML_TEMPLATE, tramites=tramites)
 
-@app.route('/agregar', method=['POST'])
-def agregar():
-    nuevo_tramite = Tramite(
-        cliente=request.form['cliente'],
-        tipo_tramite=request.form['tipo']
-    )
-    db.session.add(nuevo_tramite)
+@app.route('/add', methods=['POST'])
+def add():
+    nuevo = Tramite(cliente=request.form['cliente'], tipo=request.form['tipo'])
+    db.session.add(nuevo)
     db.session.commit()
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
-
