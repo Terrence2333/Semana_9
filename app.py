@@ -4,9 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'clave_secreta_terrence_m_2026'
+app.secret_key = 'clave_terrence_2026'
 
-# Configuración de Base de Datos
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'extranjeria.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -24,82 +23,56 @@ with app.app_context():
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <title>Terrence.m | Gestión Migratoria Real</title>
+    <title>Terrence.m | Portal</title>
     <style>
-        body { background: #05080a; color: #00d2ff; font-family: 'Courier New', monospace; overflow-x: hidden; }
-        .glass-card { background: rgba(0, 210, 255, 0.03); border: 1px solid #00d2ff; border-radius: 10px; box-shadow: 0 0 15px rgba(0, 210, 255, 0.1); }
-        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; transition: 0.3s; letter-spacing: 2px; }
-        .btn-neon:hover { background: #00d2ff; color: #000; box-shadow: 0 0 30px #00d2ff; }
-        .table { color: #fff; border-color: #00d2ff; }
-        input, select { background: #0a0b10 !important; color: #00d2ff !important; border: 1px solid #00d2ff !important; }
-        .status-scan { font-size: 0.7rem; color: #00ff00; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        body { background: #05080a; color: #00d2ff; font-family: monospace; }
+        .glass { background: rgba(0, 210, 255, 0.05); border: 1px solid #00d2ff; border-radius: 10px; padding: 20px; }
+        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; }
+        .btn-neon:hover { background: #00d2ff; color: #000; }
+        input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #00d2ff !important; }
     </style>
 </head>
 <body class="p-4">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-info pb-3">
-            <div>
-                <h1 class="m-0 text-uppercase fw-bold"><i class="fas fa-fingerprint"></i> TERRENCE.M</h1>
-                <span class="status-scan"><i class="fas fa-shield-virus"></i> ENCRIPTACIÓN AES-256 ACTIVA</span>
-            </div>
-            <a href="/download" class="btn btn-neon btn-sm"><i class="fas fa-download me-2"></i>REPORTE LEGAL</a>
+        <div class="d-flex justify-content-between mb-4 border-bottom border-info pb-3">
+            <h1><i class="fas fa-microchip"></i> TERRENCE.M</h1>
+            <a href="/download" class="btn btn-neon">DESCARGAR REPORTE</a>
         </div>
-        
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="glass-card p-4">
-                    <h6 class="text-info mb-4 fw-bold"><i class="fas fa-id-card me-2"></i>REGISTRO DE VISADOS REALES</h6>
+                <div class="glass">
+                    <h6>NUEVO TRÁMITE REAL</h6>
                     <form action="/add" method="POST">
-                        <div class="mb-3">
-                            <label class="small opacity-75">NOMBRE DEL SOLICITANTE</label>
-                            <input type="text" name="cliente" class="form-control" placeholder="..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="small opacity-75">TIPO DE VISA (REAL)</label>
-                            <select name="tipo" class="form-select">
-                                <option value="Visa de Residencia Temporal - Mercosur">Temporal - Mercosur</option>
-                                <option value="Visa de Residencia Permanente">Residencia Permanente</option>
-                                <option value="Visa Nómada Digital">Nómada Digital (Ecuador)</option>
-                                <option value="Visa de Inversionista">Inversionista</option>
-                                <option value="Visa de Amparo">Visa de Amparo</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-neon w-100">PROCESAR SOLICITUD</button>
+                        <input type="text" name="cliente" class="form-control mb-3" placeholder="Nombre Ciudadano" required>
+                        <select name="tipo" class="form-select mb-3">
+                            <option value="Visa Mercosur">Visa Mercosur</option>
+                            <option value="Visa Nomada Digital">Visa Nomada Digital</option>
+                            <option value="Residencia Permanente">Residencia Permanente</option>
+                        </select>
+                        <button type="submit" class="btn btn-neon w-100">PROCESAR</button>
                     </form>
                 </div>
-                
-                <div class="glass-card mt-4 p-3 border-success" style="font-size: 0.7rem;">
-                    <div class="text-success mb-1">LOCALIZACIÓN: LATITUD 2.189° S, LONGITUD 79.889° W</div>
-                    <div class="text-info">ESTADO DB: CONEXIÓN ESTABLE POR PUERTO 5432</div>
-                </div>
             </div>
-
             <div class="col-md-8">
-                <div class="glass-card p-4">
-                    <h6 class="text-info mb-4 fw-bold"><i class="fas fa-database me-2"></i>BITÁCORA DE TRÁMITES MIGRATORIOS</h6>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="text-info">
-                                <tr><th>REGISTRO</th><th>CIUDADANO</th><th>CATEGORÍA</th><th>ACCIÓN</th></tr>
-                            </thead>
-                            <tbody>
-                                {% for t in tramites %}
-                                <tr>
-                                    <td class="small">UID-{{ t.id }}</td>
-                                    <td class="fw-bold">{{ t.cliente }}</td>
-                                    <td><span class="badge border border-info">{{ t.tipo }}</span></td>
-                                    <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash"></i></a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="glass">
+                    <table class="table table-dark">
+                        <thead><tr><th>ID</th><th>CLIENTE</th><th>VISA</th><th>BORRAR</th></tr></thead>
+                        <tbody>
+                            {% for t in tramites %}
+                            <tr>
+                                <td>{{ t.id }}</td>
+                                <td>{{ t.cliente }}</td>
+                                <td>{{ t.tipo }}</td>
+                                <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -110,7 +83,7 @@ HTML_TEMPLATE = """
 
 @app.route('/')
 def index():
-    tramites = Tramite.query.order_by(Tramite.id.desc()).all()
+    tramites = Tramite.query.all()
     return render_template_string(HTML_TEMPLATE, tramites=tramites)
 
 @app.route('/add', methods=['POST'])
@@ -130,10 +103,11 @@ def delete(id):
 @app.route('/download')
 def download():
     tramites = Tramite.query.all()
-    output = "TERRENCE.M - REPORTE DE GESTIÓN MIGRATORIA OFICIAL\\n" + "="*50 + "\\n"
+    output = "REPORTE TERRENCE.M\\n"
     for t in tramites:
-        output += f"UID: {t.id} | Ciudadano: {t.cliente} | Visa: {t.tipo} | Fecha: {t.fecha}\\n"
-    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte_migratorio.txt"})
+        output += f"ID: {t.id} - {t.cliente} - {t.tipo}\\n"
+    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte.txt"})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
