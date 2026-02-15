@@ -30,19 +30,38 @@ HTML_TEMPLATE = """
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Terrence.m | Intelligence Core</title>
     <style>
-        body { background: #020406; color: #00d2ff; font-family: 'Courier New', monospace; overflow-x: hidden; }
-        .cyber-panel { background: rgba(0, 210, 255, 0.03); border: 1px solid #00d2ff; border-radius: 5px; padding: 20px; position: relative; box-shadow: inset 0 0 15px rgba(0,210,255,0.1); }
+        body { 
+            background: linear-gradient(rgba(2, 4, 6, 0.85), rgba(2, 4, 6, 0.85)), 
+                        url('https://images.unsplash.com/photo-1503221043305-f7498f8b7888?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #00d2ff; 
+            font-family: 'Courier New', monospace; 
+            overflow-x: hidden; 
+        }
+        .cyber-panel { 
+            background: rgba(0, 210, 255, 0.05); 
+            backdrop-filter: blur(10px);
+            border: 1px solid #00d2ff; 
+            border-radius: 5px; 
+            padding: 20px; 
+            box-shadow: inset 0 0 15px rgba(0,210,255,0.1); 
+        }
         .header-main { border-bottom: 2px solid #00d2ff; margin-bottom: 30px; padding-bottom: 10px; }
         .btn-cyber { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; text-transform: uppercase; font-weight: bold; transition: 0.3s; }
         .btn-cyber:hover { background: #00d2ff; color: #000; box-shadow: 0 0 20px #00d2ff; }
-        input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #333 !important; border-bottom: 1px solid #00d2ff !important; }
-        .stat-card { border-left: 3px solid #00ff00; padding-left: 10px; margin-bottom: 20px; }
+        input, select { background: rgba(0, 0, 0, 0.7) !important; color: #00d2ff !important; border: 1px solid #333 !important; border-bottom: 1px solid #00d2ff !important; }
         .progress { height: 4px; background: #081015; margin-top: 8px; border-radius: 0; }
         .progress-bar { background: #00d2ff; box-shadow: 0 0 10px #00d2ff; }
-        .scanline { width: 100%; height: 100px; background: linear-gradient(0deg, rgba(0,210,255,0) 0%, rgba(0,210,255,0.1) 50%, rgba(0,210,255,0) 100%); position: absolute; animation: moveScan 4s infinite linear; pointer-events: none; }
+        .scanline { 
+            width: 100%; height: 100px; 
+            background: linear-gradient(0deg, rgba(0,210,255,0) 0%, rgba(0,210,255,0.05) 50%, rgba(0,210,255,0) 100%); 
+            position: absolute; animation: moveScan 4s infinite linear; pointer-events: none; 
+        }
         @keyframes moveScan { from { top: -100px; } to { top: 100%; } }
-        .link-exp { color: #00d2ff; text-decoration: none; border: 1px solid transparent; padding: 2px 5px; }
-        .link-exp:hover { border: 1px solid #00d2ff; background: rgba(0,210,255,0.1); }
+        .link-exp { color: #00d2ff; text-decoration: none; font-weight: bold; }
+        .link-exp:hover { text-shadow: 0 0 10px #00d2ff; color: #fff; }
     </style>
 </head>
 <body class="p-4">
@@ -50,29 +69,23 @@ HTML_TEMPLATE = """
     <div class="container-fluid">
         <div class="header-main d-flex justify-content-between align-items-center">
             <div>
-                <h1 class="m-0 fw-bold"><i class="fas fa-microchip"></i> TERRENCE.M</h1>
-                <small class="text-success"><i class="fas fa-terminal"></i> KERNEL MIGRATORIO v4.0 // CONECTADO</small>
+                <h1 class="m-0 fw-bold"><i class="fas fa-passport"></i> TERRENCE.M</h1>
+                <small class="text-success"><i class="fas fa-globe-americas"></i> SISTEMA GLOBAL DE VISADO // FONDO TURÍSMO ACTIVO</small>
             </div>
-            <div class="d-flex gap-3">
-                <div class="text-end border-end pe-3 border-info">
-                    <div class="small opacity-50">LATENCIA DB</div>
-                    <div class="text-info fw-bold">12ms</div>
-                </div>
-                <a href="/download" class="btn btn-cyber btn-sm"><i class="fas fa-download"></i> REPORTE TOTAL</a>
-            </div>
+            <a href="/download" class="btn btn-cyber btn-sm"><i class="fas fa-file-invoice"></i> REPORTE LEGAL</a>
         </div>
 
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="cyber-panel mb-4">
-                    <h6 class="mb-4 text-info fw-bold border-bottom border-info pb-2">INGRESAR PROTOCOLO</h6>
+                    <h6 class="mb-4 text-info fw-bold border-bottom border-info pb-2">NUEVO EXPEDIENTE</h6>
                     <form action="/add" method="POST">
                         <div class="mb-3">
-                            <label class="small opacity-50">NOMBRE DEL SOLICITANTE</label>
-                            <input type="text" name="cliente" class="form-control" placeholder="Esperando entrada..." required>
+                            <label class="small opacity-75">NOMBRE DEL CIUDADANO</label>
+                            <input type="text" name="cliente" class="form-control" placeholder="..." required>
                         </div>
                         <div class="mb-4">
-                            <label class="small opacity-50">TIPO DE VISA (REAL)</label>
+                            <label class="small opacity-75">TIPO DE VISA (REAL)</label>
                             <select name="tipo" class="form-select">
                                 <option value="Visa Mercosur">Temporal - Mercosur</option>
                                 <option value="Visa Nomada Digital">Nómada Digital (EC)</option>
@@ -80,54 +93,43 @@ HTML_TEMPLATE = """
                                 <option value="Inversionista">Inversionista G1</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-cyber w-100">EJECUTAR SINCRONIZACIÓN</button>
+                        <button type="submit" class="btn btn-cyber w-100">PROCESAR TRÁMITE</button>
                     </form>
                 </div>
-
-                <div class="stat-card">
-                    <div class="small opacity-50">EXPEDIENTES ACTIVOS</div>
-                    <h3 class="m-0">{{ tramites|length }}</h3>
-                    <div class="progress"><div class="progress-bar w-50"></div></div>
+                <div class="cyber-panel p-3">
+                    <div class="small opacity-75 text-center">TOTAL REGISTROS</div>
+                    <h2 class="text-center m-0">{{ tramites|length }}</h2>
                 </div>
             </div>
 
             <div class="col-md-9">
                 <div class="cyber-panel">
                     <div class="d-flex justify-content-between mb-3 align-items-center">
-                        <h6 class="m-0 text-info fw-bold"><i class="fas fa-database"></i> BASE DE DATOS EN TIEMPO REAL</h6>
-                        <input type="text" id="busqueda" class="form-control w-25 form-control-sm" placeholder="Buscar ciudadano...">
+                        <h6 class="m-0 text-info fw-bold"><i class="fas fa-database"></i> BITÁCORA DE CONTROL</h6>
+                        <input type="text" id="busqueda" class="form-control w-25 form-control-sm" placeholder="Buscar...">
                     </div>
-                    
                     <div class="table-responsive">
-                        <table class="table table-dark table-hover border-secondary" id="tabla">
+                        <table class="table table-dark table-hover" id="tabla">
                             <thead>
                                 <tr class="text-info">
-                                    <th>#UID</th>
+                                    <th>ID</th>
                                     <th>CIUDADANO</th>
-                                    <th>CATEGORÍA</th>
-                                    <th>PROGRESO</th>
+                                    <th>VISA</th>
                                     <th>ESTADO</th>
-                                    <th>ACCIÓN</th>
+                                    <th>ELIMINAR</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for t in tramites %}
                                 <tr>
-                                    <td class="text-secondary small">0x0{{ t.id }}</td>
-                                    <td>
-                                        <a href="/expediente/{{ t.cliente }}" class="link-exp">
-                                            <i class="fas fa-user-circle me-2"></i>{{ t.cliente }}
-                                        </a>
-                                    </td>
-                                    <td><span class="badge border border-info text-info">{{ t.tipo }}</span></td>
+                                    <td class="small">#{{ t.id }}</td>
+                                    <td><a href="/expediente/{{ t.cliente }}" class="link-exp">{{ t.cliente }}</a></td>
+                                    <td><span class="badge border border-info">{{ t.tipo }}</span></td>
                                     <td style="width: 150px;">
-                                        <div class="progress"><div class="progress-bar" style="width: 65%;"></div></div>
-                                        <small style="font-size: 10px; color: #00ff00;">Verificando...</small>
+                                        <div class="progress"><div class="progress-bar" style="width: 70%;"></div></div>
+                                        <small style="font-size: 10px; color: #00ff00;">En Auditoría</small>
                                     </td>
-                                    <td><span class="text-success"><i class="fas fa-check-double"></i> OK</span></td>
-                                    <td>
-                                        <a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash-alt"></i></a>
-                                    </td>
+                                    <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash-alt"></i></a></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
@@ -135,10 +137,6 @@ HTML_TEMPLATE = """
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="mt-5 small text-center opacity-50">
-            <i class="fas fa-map-marker-alt"></i> GUAYAQUIL HUB: 2.189° S, 79.889° W | ENCRIPTACIÓN SSL-TLS ACTIVA
         </div>
     </div>
 
@@ -178,23 +176,20 @@ def delete(id):
 @app.route('/download')
 def download():
     tramites = Tramite.query.all()
-    output = "TERRENCE.M INTELLIGENCE SYSTEM REPORT\\n" + "="*40 + "\\n"
+    output = "REPORTE TERRENCE.M\\n"
     for t in tramites:
-        output += f"UID: {t.id} | Cliente: {t.cliente} | Tipo: {t.tipo} | Fecha: {t.fecha}\\n"
-    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte_terrence.txt"})
+        output += f"ID: {t.id} - {t.cliente} - {t.tipo}\\n"
+    return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte.txt"})
 
 @app.route('/expediente/<cliente>')
 def expediente(cliente):
     return f'''
-    <body style="background: #020406; color: #00d2ff; font-family: monospace; padding: 50px; display: flex; align-items: center; justify-content: center; height: 100vh;">
-        <div style="border: 2px solid #00d2ff; padding: 40px; border-radius: 10px; text-align: center; box-shadow: 0 0 50px rgba(0,210,255,0.2);">
-            <h1 style="text-transform: uppercase;">ACCESO AUTORIZADO</h1>
-            <hr style="border-color: #00d2ff;">
-            <h3>SOLICITANTE: {cliente}</h3>
-            <p>ESTADO: <span style="color: #00ff00;">EXPEDIENTE ENVIADO A CANCILLERÍA</span></p>
-            <p style="opacity: 0.5;">ID de Rastreo: T-{cliente[:3].upper()}-2026</p>
-            <br>
-            <a href="/" style="color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 10px 20px;">[ VOLVER AL TERMINAL ]</a>
+    <body style="background: #020406; color: #00d2ff; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh;">
+        <div style="border: 2px solid #00d2ff; padding: 40px; text-align: center; background: rgba(0,0,0,0.8);">
+            <h1>EXPEDIENTE DE: {cliente}</h1>
+            <p>SISTEMA: TERRENCE.M CORE</p>
+            <p>ESTADO: <span style="color: #00ff00;">ENVIADO A EMBAJADA</span></p>
+            <br><a href="/" style="color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 10px;">[ VOLVER ]</a>
         </div>
     </body>
     '''
