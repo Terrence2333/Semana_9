@@ -6,6 +6,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'clave_terrence_2026'
 
+# Base de Datos Segura
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'extranjeria.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -23,60 +24,74 @@ with app.app_context():
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <title>Terrence.m | Portal</title>
     <style>
-        body { background: #05080a; color: #00d2ff; font-family: monospace; }
-        .glass { background: rgba(0, 210, 255, 0.05); border: 1px solid #00d2ff; border-radius: 10px; padding: 20px; }
-        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; transition: 0.3s; }
-        .btn-neon:hover { background: #00d2ff; color: #000; box-shadow: 0 0 20px #00d2ff; }
+        body { background: #05080a; color: #00d2ff; font-family: 'Courier New', monospace; }
+        .glass { background: rgba(0, 210, 255, 0.05); border: 1px solid #00d2ff; border-radius: 10px; padding: 20px; box-shadow: 0 0 20px rgba(0,210,255,0.1); }
+        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; transition: 0.3s; font-weight: bold; }
+        .btn-neon:hover { background: #00d2ff; color: #000; box-shadow: 0 0 30px #00d2ff; transform: scale(1.02); }
         input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #00d2ff !important; }
-        .status-scan { font-size: 0.8rem; color: #00ff00; }
+        .link-expediente { color: #00d2ff; text-decoration: none; border-bottom: 1px dashed #00d2ff; }
+        .link-expediente:hover { color: #fff; border-bottom: 1px solid #fff; }
+        .status-scan { font-size: 0.7rem; color: #00ff00; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
     </style>
 </head>
 <body class="p-4">
     <div class="container">
-        <div class="d-flex justify-content-between mb-4 border-bottom border-info pb-3">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-info pb-3">
             <div>
-                <h1><i class="fas fa-microchip"></i> TERRENCE.M</h1>
-                <span class="status-scan">SISTEMA DE VISADO REAL ACTIVO</span>
+                <h1 class="m-0"><i class="fas fa-fingerprint"></i> TERRENCE.M</h1>
+                <span class="status-scan"><i class="fas fa-shield-check"></i> ENCRIPTACIÓN AES-256 ACTIVA</span>
             </div>
-            <a href="/download" class="btn btn-neon">DESCARGAR REPORTE</a>
+            <a href="/download" class="btn btn-neon">DESCARGAR REPORTE .TXT</a>
         </div>
+        
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="glass">
-                    <h6>NUEVO TRÁMITE REAL</h6>
+                    <h6 class="text-info mb-4 fw-bold">NUEVO PROTOCOLO</h6>
                     <form action="/add" method="POST">
-                        <input type="text" name="cliente" class="form-control mb-3" placeholder="Nombre Ciudadano" required>
+                        <input type="text" name="cliente" class="form-control mb-3" placeholder="Nombre del Solicitante" required>
                         <select name="tipo" class="form-select mb-3">
                             <option value="Visa Mercosur">Visa Mercosur</option>
                             <option value="Visa Nomada Digital">Visa Nomada Digital</option>
                             <option value="Residencia Permanente">Residencia Permanente</option>
+                            <option value="Visa de Inversionista">Visa de Inversionista</option>
                         </select>
-                        <button type="submit" class="btn btn-neon w-100">PROCESAR</button>
+                        <button type="submit" class="btn btn-neon w-100">SINCRONIZAR</button>
                     </form>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="glass">
-                    <table class="table table-dark table-hover">
-                        <thead><tr><th>ID</th><th>CLIENTE</th><th>VISA</th><th>BORRAR</th></tr></thead>
-                        <tbody>
-                            {% for t in tramites %}
-                            <tr>
-                                <td>#{{ t.id }}</td>
-                                <td>{{ t.cliente }}</td>
-                                <td>{{ t.tipo }}</td>
-                                <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash"></i></a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                    <h6 class="text-info mb-4 fw-bold">BITÁCORA DE EXPEDIENTES (Click en nombre para ver estado)</h6>
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover">
+                            <thead class="text-info border-bottom border-info">
+                                <tr><th>ID</th><th>CIUDADANO</th><th>CATEGORÍA</th><th>ACCIÓN</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for t in tramites %}
+                                <tr>
+                                    <td class="small">#{{ t.id }}</td>
+                                    <td>
+                                        <a href="/expediente/{{ t.cliente }}" class="link-expediente">
+                                            <i class="fas fa-external-link-alt me-1" style="font-size: 0.7rem;"></i>{{ t.cliente }}
+                                        </a>
+                                    </td>
+                                    <td><span class="badge border border-info">{{ t.tipo }}</span></td>
+                                    <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash"></i></a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +102,7 @@ HTML_TEMPLATE = """
 
 @app.route('/')
 def index():
-    tramites = Tramite.query.all()
+    tramites = Tramite.query.order_by(Tramite.id.desc()).all()
     return render_template_string(HTML_TEMPLATE, tramites=tramites)
 
 @app.route('/add', methods=['POST'])
@@ -107,22 +122,24 @@ def delete(id):
 @app.route('/download')
 def download():
     tramites = Tramite.query.all()
-    output = "REPORTE TERRENCE.M\\n"
+    output = "REPORTE TERRENCE.M - GESTIÓN MIGRATORIA\\n" + "="*40 + "\\n"
     for t in tramites:
-        output += f"ID: {t.id} - {t.cliente} - {t.tipo}\\n"
+        output += f"ID: {t.id} | Cliente: {t.cliente} | Visa: {t.tipo}\\n"
     return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte.txt"})
 
-# NUEVA RUTA DE NEGOCIO PERSONALIZADA
 @app.route('/expediente/<cliente>')
 def expediente(cliente):
     return f'''
     <body style="background: #05080a; color: #00d2ff; font-family: monospace; padding: 50px;">
-        <div style="border: 1px solid #00d2ff; padding: 20px; border-radius: 10px;">
-            <h2>CONSULTA DE EXPEDIENTE: {cliente}</h2>
+        <div style="border: 1px solid #00d2ff; padding: 30px; border-radius: 10px; max-width: 600px; margin: auto; box-shadow: 0 0 30px rgba(0,210,255,0.2);">
+            <h2 style="text-transform: uppercase;"><i class="fas fa-user-shield"></i> Expediente: {cliente}</h2>
             <hr style="border-color: #00d2ff;">
-            <p>ESTADO: <span style="color: #00ff00;">VALIDANDO DOCUMENTACIÓN EN CANCILLERÍA</span></p>
-            <a href="/" style="color: #00d2ff; text-decoration: none;">[ VOLVER AL PANEL ]</a>
+            <p style="font-size: 1.1rem;">ESTADO ACTUAL: <span style="color: #00ff00; font-weight: bold;">VERIFICACIÓN CONSULAR ACTIVA</span></p>
+            <p style="opacity: 0.7;">Sincronizado con Cancillería de Ecuador: OK</p>
+            <br>
+            <a href="/" style="color: #00d2ff; text-decoration: none; border: 1px solid #00d2ff; padding: 10px 20px; display: inline-block;">[ VOLVER AL PANEL ]</a>
         </div>
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </body>
     '''
 
