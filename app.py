@@ -32,15 +32,19 @@ HTML_TEMPLATE = """
     <style>
         body { background: #05080a; color: #00d2ff; font-family: monospace; }
         .glass { background: rgba(0, 210, 255, 0.05); border: 1px solid #00d2ff; border-radius: 10px; padding: 20px; }
-        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; }
-        .btn-neon:hover { background: #00d2ff; color: #000; }
+        .btn-neon { border: 1px solid #00d2ff; color: #00d2ff; background: transparent; transition: 0.3s; }
+        .btn-neon:hover { background: #00d2ff; color: #000; box-shadow: 0 0 20px #00d2ff; }
         input, select { background: #000 !important; color: #00d2ff !important; border: 1px solid #00d2ff !important; }
+        .status-scan { font-size: 0.8rem; color: #00ff00; }
     </style>
 </head>
 <body class="p-4">
     <div class="container">
         <div class="d-flex justify-content-between mb-4 border-bottom border-info pb-3">
-            <h1><i class="fas fa-microchip"></i> TERRENCE.M</h1>
+            <div>
+                <h1><i class="fas fa-microchip"></i> TERRENCE.M</h1>
+                <span class="status-scan">SISTEMA DE VISADO REAL ACTIVO</span>
+            </div>
             <a href="/download" class="btn btn-neon">DESCARGAR REPORTE</a>
         </div>
         <div class="row g-4">
@@ -60,12 +64,12 @@ HTML_TEMPLATE = """
             </div>
             <div class="col-md-8">
                 <div class="glass">
-                    <table class="table table-dark">
+                    <table class="table table-dark table-hover">
                         <thead><tr><th>ID</th><th>CLIENTE</th><th>VISA</th><th>BORRAR</th></tr></thead>
                         <tbody>
                             {% for t in tramites %}
                             <tr>
-                                <td>{{ t.id }}</td>
+                                <td>#{{ t.id }}</td>
                                 <td>{{ t.cliente }}</td>
                                 <td>{{ t.tipo }}</td>
                                 <td><a href="/delete/{{ t.id }}" class="text-danger"><i class="fas fa-trash"></i></a></td>
@@ -107,6 +111,20 @@ def download():
     for t in tramites:
         output += f"ID: {t.id} - {t.cliente} - {t.tipo}\\n"
     return Response(output, mimetype="text/plain", headers={"Content-disposition": "attachment; filename=reporte.txt"})
+
+# NUEVA RUTA DE NEGOCIO PERSONALIZADA
+@app.route('/expediente/<cliente>')
+def expediente(cliente):
+    return f'''
+    <body style="background: #05080a; color: #00d2ff; font-family: monospace; padding: 50px;">
+        <div style="border: 1px solid #00d2ff; padding: 20px; border-radius: 10px;">
+            <h2>CONSULTA DE EXPEDIENTE: {cliente}</h2>
+            <hr style="border-color: #00d2ff;">
+            <p>ESTADO: <span style="color: #00ff00;">VALIDANDO DOCUMENTACIÓN EN CANCILLERÍA</span></p>
+            <a href="/" style="color: #00d2ff; text-decoration: none;">[ VOLVER AL PANEL ]</a>
+        </div>
+    </body>
+    '''
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
